@@ -16,7 +16,7 @@ def create():
     data = request.form
     s = Shortener(hash_shortener.shorten, SqliteStore(sqlite3.connect('url-store.db')), regex_validator.validate)
     try:
-        return f"{host}{s.create(data['url'])}"
+        return f"{host}{s.create(data['url'], data['user'])}"
     except ValueError as e:
         return str(e)
 
@@ -26,7 +26,15 @@ def update():
     print(data)
     s = Shortener(hash_shortener.shorten, SqliteStore(sqlite3.connect('url-store.db')), regex_validator.validate)
     try:
-        if s.update(data['short_url'], data['url'], data['user']):
+        short_url = data['short_url']
+        url = data['url']
+        if not short_url.lower().startswith('http://') or len(short_url) < len(host):
+            return 'Invalid short URL'
+        if short_url == url:
+            return 'Cannot redirect to self.'
+        short_url = short_url[-8:]
+        print(short_url)
+        if s.update(short_url, data['url'], data['user']):
             return 'URL updated successfully'
         return 'Cannot Update: either short URL does not exist or you are not the creator of the URL.'
     except ValueError as e:
@@ -36,7 +44,7 @@ def update():
 def retrieve(shorturl):
     s = Shortener(hash_shortener.shorten, SqliteStore(sqlite3.connect('url-store.db')), regex_validator.validate)
     try:
-        return redirect(s.retrieve(shorturl), code=301)
+        return redirect(s.retrieve(shorturl))
     except ValueError as e:
         return str(e)
 
