@@ -6,6 +6,9 @@ select_sql = "SELECT url FROM url_store WHERE short_url = ?"
 update_sql = "UPDATE url_store SET url = ?, updated_datetime = datetime('now', 'localtime') WHERE short_url = ? and user = ?"
 
 class SqliteStore(Store):
+    """
+    Implement the backend store using sqlite
+    """
     def __init__(self, conn) -> None:
         super().__init__()
         self.conn = conn

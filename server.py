@@ -10,11 +10,18 @@ from core.validator import regex_validator
 app = Flask(__name__)
 
 host = 'http://localhost:5000/'
+db = 'url-store.db'
+
+"""
+A flask web app to demo the URL shorten functions.
+It uses sqlite to persist the shorten string.
+"""
+
 
 @app.route('/create', methods=['POST'])
 def create():
     data = request.form
-    s = Shortener(hash_shortener.shorten, SqliteStore(sqlite3.connect('url-store.db')), regex_validator.validate)
+    s = Shortener(hash_shortener.shorten, SqliteStore(sqlite3.connect(db)), regex_validator.validate)
     try:
         return f"{host}{s.create(data['url'], data['user'])}"
     except ValueError as e:
@@ -24,11 +31,11 @@ def create():
 def update():
     data = request.form
     print(data)
-    s = Shortener(hash_shortener.shorten, SqliteStore(sqlite3.connect('url-store.db')), regex_validator.validate)
+    s = Shortener(hash_shortener.shorten, SqliteStore(sqlite3.connect(db)), regex_validator.validate)
     try:
         short_url = data['short_url']
         url = data['url']
-        if not short_url.lower().startswith('http://') or len(short_url) < len(host):
+        if not short_url.lower().startswith(host):
             return 'Invalid short URL'
         if short_url == url:
             return 'Cannot redirect to self.'
@@ -42,7 +49,7 @@ def update():
 
 @app.route('/<shorturl>', methods=['GET'])
 def retrieve(shorturl):
-    s = Shortener(hash_shortener.shorten, SqliteStore(sqlite3.connect('url-store.db')), regex_validator.validate)
+    s = Shortener(hash_shortener.shorten, SqliteStore(sqlite3.connect(db)), regex_validator.validate)
     try:
         return redirect(s.retrieve(shorturl))
     except ValueError as e:
