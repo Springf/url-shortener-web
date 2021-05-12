@@ -45,5 +45,7 @@ Run unit tests: `pytest tests`
 
 ## Run
 Linux: `./run.sh`
+
 Windows: `run.bat`
+
 Navigate to http://localhost:5000 to play.
