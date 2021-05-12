@@ -26,7 +26,7 @@ To setup the project, assuming python is installed.
 Clone the project and update submodules, then create python venv:
 ```
 git clone https://github.com/Springf/url-shortener-web.git
-cd url-shortener
+cd url-shortener-web
 git submodule init
 git submodule update
 python -m venv venv
