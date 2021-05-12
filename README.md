@@ -10,7 +10,7 @@ This is just a local demo app and not meant for any real world usage.
 +-- static
 | static files like js/css for frontend UI
 +-- store
-|  sqlite_store.py #in memory implementation of backend store
+|  sqlite_store.py #sqlite implementation of backend store
 +-- templates
 | html template to render the frontend UI
 +-- tests
